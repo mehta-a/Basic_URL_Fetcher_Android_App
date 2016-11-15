@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">IIITDFetcher</string>
+    <string name="getURLContentButton">Download</string>
+    <string name="resetContentButton">Reset</string>
+</resources>
