@@ -16,6 +16,10 @@ import java.io.InputStreamReader;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.w3c.dom.Document;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -104,8 +108,22 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             Log.i(TAG, "Inside onPostExecute");
+            String res = "Fetched Media: \n";
             if(flagSuccess) {
-                mTextViewResult.setText(result.toString());
+                org.jsoup.nodes.Document doc = Jsoup.parse(result.toString());
+                Elements links = doc.select("a[href]");
+                Elements media = doc.select("[src]");
+                for (Element src : media) {
+                    if (src.tagName().equals("img"))
+                        res = res + src.tagName() + src.attr("abs:src")+"\n";
+                }
+                res = res + "\n Fetched Links: \n";
+                for (Element link : links) {
+                    res = res + link.attr("abs:href")+"\n";
+                    res = res.trim();
+                    res = res + "\n";
+                }
+                    mTextViewResult.setText(res);
             }else {
                 mTextViewResult.setText("Download Exception! \nCheck your internet and try again!");
             }
